@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     private string currentPlayerName;
     private int currentPlayerScore;
 
-    internal BestPlayer BestPlayer { get => bestPlayer; set => bestPlayer = value; }
+    public BestPlayer BestPlayer { get => bestPlayer; set => bestPlayer = value; }
     public int CurrentPlayerScore { get => currentPlayerScore; set => currentPlayerScore = value; }
 
     private void Awake()
@@ -40,11 +40,12 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
-    public void GameOver()
+    // Handles the Game over
+    public void CheckPlayerScore()
     {
-        if(currentPlayerScore > bestPlayer.points)
+        if(bestPlayer == null || currentPlayerScore > bestPlayer.score)
         {
-            SaveBestPlayer();
+            SaveBestPlayer();        
         }
     }
 
@@ -53,7 +54,7 @@ public class GameManager : MonoBehaviour
     {
         BestPlayer data = new BestPlayer();
         data.name = currentPlayerName;
-        data.points = currentPlayerScore;
+        data.score = currentPlayerScore;
 
         string json = JsonUtility.ToJson(data);
 
@@ -87,11 +88,15 @@ public class GameManager : MonoBehaviour
 #endif
         Application.Quit();
     }
+
+
+    
 }
 
-[Serializable]
-class BestPlayer
+
+[System.Serializable]
+public class BestPlayer
 {
     public string name;
-    public int points;
+    public int score;
 }

@@ -71,7 +71,7 @@ public class MenuUIHandler : MonoBehaviour
 
         if (GameManager.instance.BestPlayer != null)
         {
-            string bestScore = $"<color=green>{GameManager.instance.BestPlayer.name}</color> -> {GameManager.instance.BestPlayer.points} points";
+            string bestScore = $"Best Score: <color=green>{GameManager.instance.BestPlayer.name}</color> ... {GameManager.instance.BestPlayer.score} points";
             bestPlayerScore.text = bestScore;            
         }
         else
