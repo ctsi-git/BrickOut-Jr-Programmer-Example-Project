@@ -230,4 +230,10 @@ public class MainManager : MonoBehaviour
         GameManager.instance.CurrentPlayerScore = m_Points;
         GameManager.instance.CheckPlayerScore();
     }
+
+    // Returns to the main menu
+    public void BackToMenu()
+    {
+        SceneManager.LoadSceneAsync(0);
+    }
 }

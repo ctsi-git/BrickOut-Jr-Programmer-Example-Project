@@ -43,9 +43,9 @@ public class GameManager : MonoBehaviour
     // Handles the Game over
     public void CheckPlayerScore()
     {
-        if(bestPlayer == null || currentPlayerScore > bestPlayer.score)
+        if (bestPlayer == null || currentPlayerScore > bestPlayer.score)
         {
-            SaveBestPlayer();        
+            SaveBestPlayer();
         }
     }
 
@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
 
         File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
     }
-    
+
     // Loads from disk the best player data
     public void LoadBestPlayer()
     {
@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    
+
 }
 
 
