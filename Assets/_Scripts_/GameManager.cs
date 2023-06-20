@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     private int currentPlayerScore;
 
     internal BestPlayer BestPlayer { get => bestPlayer; set => bestPlayer = value; }
+    public int CurrentPlayerScore { get => currentPlayerScore; set => currentPlayerScore = value; }
 
     private void Awake()
     {
@@ -39,19 +40,27 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
-
-    // Ends the current game
-    public void QuitGame()
+    public void GameOver()
     {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#endif
-        Application.Quit();
+        if(currentPlayerScore > bestPlayer.points)
+        {
+            SaveBestPlayer();
+        }
     }
 
+    // Saves the new best player data to disk
+    public void SaveBestPlayer()
+    {
+        BestPlayer data = new BestPlayer();
+        data.name = currentPlayerName;
+        data.points = currentPlayerScore;
 
+        string json = JsonUtility.ToJson(data);
+
+        File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
+    }
     
-    // Loads from disk the team selected color saved
+    // Loads from disk the best player data
     public void LoadBestPlayer()
     {
         string path = Application.persistentDataPath + "/savefile.json";
@@ -66,6 +75,17 @@ public class GameManager : MonoBehaviour
         {
             bestPlayer = null;
         }
+    }
+
+
+
+    // Ends the current game
+    public void QuitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+        Application.Quit();
     }
 }
 
