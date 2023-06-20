@@ -36,6 +36,7 @@ public class MainManager : MonoBehaviour
         SetGameOverPanel();
         SetPausePanel();
         SetWinGamePanel();
+        StopGame(false);
     }
 
     private void Update()
@@ -100,12 +101,12 @@ public class MainManager : MonoBehaviour
         if (gamePausedPanel.activeSelf)
         {
             gamePausedPanel.SetActive(false);
-            Time.timeScale = 1; 
+            StopGame(false);
         }
         else
         {
             gamePausedPanel.SetActive(true);
-            Time.timeScale = 0;
+            StopGame(true);
         }
     }
 
@@ -194,6 +195,21 @@ public class MainManager : MonoBehaviour
 
         CheckScore();
 
+        StopGame(true);
+
+    }
+
+    // Set the play timescale
+    private void StopGame(bool stop)
+    {
+        if (stop)
+        {
+            Time.timeScale = 0;
+        }
+        else
+        {
+            Time.timeScale = 1;
+        }
     }
 
     // Shows the Best score player name and score

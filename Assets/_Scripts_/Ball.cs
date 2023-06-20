@@ -11,7 +11,13 @@ public class Ball : MonoBehaviour
     {
         m_Rigidbody = GetComponent<Rigidbody>();
     }
-    
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        SoundManager.instance.SetBounceSoundEffect();
+    }
+
+
     private void OnCollisionExit(Collision other)
     {
         var velocity = m_Rigidbody.velocity;
