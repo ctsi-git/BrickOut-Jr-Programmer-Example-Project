@@ -15,11 +15,15 @@ public class MainManager : MonoBehaviour
     [Header("Visuals")]
     [SerializeField] private TMP_Text scoreText;
     [SerializeField] private TMP_Text bestScoreText;
+    [SerializeField] private TMP_Text bricksLeftText;
+
+    [Header("Game Status Visuals")]
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private GameObject gamePausedPanel;
+    [SerializeField] private GameObject winGamePanel;
 
-    const float step = 0.6f;
 
+    private int bricksLeft = 0;
     private bool m_Started = false;
     private int m_Points;
     private bool m_GameOver = false;
@@ -31,6 +35,7 @@ public class MainManager : MonoBehaviour
         SetBricks();
         SetGameOverPanel();
         SetPausePanel();
+        SetWinGamePanel();
     }
 
     private void Update()
@@ -65,6 +70,18 @@ public class MainManager : MonoBehaviour
         {
             gameOverPanel = GameObject.Find("GameOverPanel");
         }
+        gameOverPanel.SetActive(false);
+    }
+
+
+    // checks if the Win panel is defined
+    private void SetWinGamePanel()
+    {
+        if (!winGamePanel)
+        {
+            winGamePanel = GameObject.Find("WinGamePanel");
+        }
+        winGamePanel.SetActive(false);
     }
 
     // Check if the pause panel is defined
@@ -74,6 +91,7 @@ public class MainManager : MonoBehaviour
         {
             gamePausedPanel = GameObject.Find("PausePanel");
         }
+        gamePausedPanel.SetActive(false);
     }
 
     // Pauses the game
@@ -119,7 +137,9 @@ public class MainManager : MonoBehaviour
         {
             brickContainer = GameObject.Find("BrickContainer").transform;
         }
+        
 
+        const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         int[] pointCountArray = new[] { 1, 1, 2, 2, 5, 5 };
 
@@ -131,21 +151,49 @@ public class MainManager : MonoBehaviour
                 var brick = Instantiate(brickPrefab, position, Quaternion.identity, brickContainer);
                 brick.PointValue = pointCountArray[i];
                 brick.onDestroyed.AddListener(AddPoint);
+                bricksLeft++;
             }
         }
+        UpdateBrickCount();
+    }
+
+    // Refresh the brick count
+    private void UpdateBrickCount()
+    {
+        if (!bricksLeftText)
+        {
+            bricksLeftText = GameObject.Find("BricksLeftText").GetComponent<TMP_Text>();
+        }
+        bricksLeftText.text = $"Bricks Left: {bricksLeft}";
     }
 
     // Adds points to the score every time a block is destroy
     void AddPoint(int point)
     {
         m_Points += point;
+        bricksLeft--;
 
         if (!scoreText)
         {
             scoreText = GameObject.Find("ScoreText").GetComponent<TMP_Text>();
         }
-
+        UpdateBrickCount();
         scoreText.text = $"Score : {m_Points}";
+
+        if(bricksLeft <= 0)
+        {            
+            WinGame();
+        }
+    }
+
+    // Handles the winning game status
+    private void WinGame()
+    {
+        m_GameOver = true;
+        winGamePanel.SetActive(true);
+
+        CheckScore();
+
     }
 
     // Shows the Best score player name and score
@@ -172,8 +220,14 @@ public class MainManager : MonoBehaviour
         m_GameOver = true;
         gameOverPanel.SetActive(true);
 
+        CheckScore();
+
+    }
+
+    // Verifies the current player score
+    private void CheckScore()
+    {
         GameManager.instance.CurrentPlayerScore = m_Points;
         GameManager.instance.CheckPlayerScore();
-
     }
 }
