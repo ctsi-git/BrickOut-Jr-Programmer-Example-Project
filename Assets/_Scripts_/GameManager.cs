@@ -8,14 +8,19 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+    
+    [Header("Music Settings")]
+    [SerializeField] bool playMusic = true;
+
+
 
     private BestPlayer bestPlayer;
-
     private string currentPlayerName;
     private int currentPlayerScore;
 
     public BestPlayer BestPlayer { get => bestPlayer; set => bestPlayer = value; }
     public int CurrentPlayerScore { get => currentPlayerScore; set => currentPlayerScore = value; }
+    public bool PlayMusic { get => playMusic; set => playMusic = value; }
 
     private void Awake()
     {

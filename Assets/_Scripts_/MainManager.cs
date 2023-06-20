@@ -220,6 +220,8 @@ public class MainManager : MonoBehaviour
         m_GameOver = true;
         gameOverPanel.SetActive(true);
 
+        SoundManager.instance.SetLostBallSoundEffect();
+
         CheckScore();
 
     }
